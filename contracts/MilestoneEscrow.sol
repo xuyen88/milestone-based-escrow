@@ -1,68 +1,30 @@
 // SPDX-License-Identifier: MIT
-pragma uint256;
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-/**
- * @title MilestoneBasedEscrow
- * @dev Hợp đồng giải ngân theo tiến độ để chứng minh tư duy quản lý dự án Web3.
- */
-contract MilestoneBasedEscrow is ReentrancyGuard, Ownable {
-    
-    struct Milestone {
-        string description;
-        uint256 amount;
-        bool isCompleted;
-        bool isApproved;
-    }
-
-    address public developer;
-    address public assessor; // Người đánh giá tiến độ (Chính là vai trò bạn ứng tuyển)
-    uint256 public totalMilestones;
+contract MilestoneEscrow is ReentrancyGuard {
+    address public assessor; // Người đánh giá (là bạn)
+    address payable public developer;
     uint256 public currentMilestone;
 
-    mapping(uint256 => Milestone) public milestones;
+    event MilestoneApproved(uint256 milestoneId, uint256 amount);
 
-    event MilestoneApproved(uint256 milestoneId);
-    event FundsReleased(uint256 amount);
-
-    constructor(address _developer, address _assessor) Ownable(msg.sender) {
-        developer = _developer;
+    constructor(address _assessor, address payable _developer) {
         assessor = _assessor;
+        developer = _developer;
     }
 
-    // Investor (Owner) nạp tiền và thiết lập tiến độ
-    function addMilestone(string memory _description, uint256 _amount) external onlyOwner {
-        milestones[totalMilestones] = Milestone(_description, _amount, false, false);
-        totalMilestones++;
-    }
-
-    // Developer báo cáo đã xong
-    function completeMilestone(uint256 _id) external {
-        require(msg.sender == developer, "Only developer can call");
-        milestones[_id].isCompleted = true;
-    }
-
-    // Assessor (Bạn) kiểm tra và phê duyệt dựa trên bằng chứng kỹ thuật (GitHub PR/Audit)
-    function approveMilestone(uint256 _id) external nonReentrant {
+    // Hàm phê duyệt giải ngân - Trọng tâm của việc đánh giá tiến độ
+    function approveMilestone(uint256 _amount) external nonReentrant {
         require(msg.sender == assessor, "Only assessor can approve");
-        require(milestones[_id].isCompleted, "Milestone not marked as completed");
-        require(!milestones[_id].isApproved, "Already approved");
-
-        milestones[_id].isApproved = true;
-        uint256 amountToRelease = milestones[_id].amount;
+        require(address(this).balance >= _amount, "Insufficient funds");
         
-        require(address(this).balance >= amountToRelease, "Insufficient contract balance");
-        
-        (bool success, ) = developer.call{value: amountToRelease}("");
-        require(success, "Transfer failed");
-
-        emit MilestoneApproved(_id);
-        emit FundsReleased(amountToRelease);
         currentMilestone++;
+        developer.transfer(_amount);
+        
+        emit MilestoneApproved(currentMilestone, _amount);
     }
 
-    receive() external payable {}
+    receive() external payable {} // Nhận tiền từ nhà đầu tư
 }
