@@ -41,3 +41,13 @@ This project is architected to handle milestone payments across different blockc
 - **Cardano Version:** Written in Aiken, utilizing the eUTXO model for deterministic security and validator-based approvals.
 
 > **Technical Insight:** Moving from Solidity to Aiken allows for a more secure, formal verification-friendly environment for large-scale project funding.
+
+**Security Features" (Đặc tính bảo mật):**
+
+Circuit Breaker: Khả năng tạm dừng hợp đồng trong trường hợp khẩn cấp.
+
+Emergency Fund Recovery: Cơ chế rút tiền an toàn về ví quản trị nếu có tranh chấp.
+
+Gas Optimized: Sử dụng .call để đảm bảo tương thích với các ví hiện đại và tiết kiệm chi phí giao dịch.
+
+Multi-chain Architecture: So sánh rõ ràng giữa mô hình Account-based (EVM) và eUTXO (Cardano).
