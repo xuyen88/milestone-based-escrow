@@ -34,3 +34,10 @@ Dự án này được thiết kế để hoạt động trên cả hai mô hìn
 - **Advantage:** Tính bảo mật cao hơn do mô hình eUTXO cho phép kiểm tra kết quả giao dịch trước khi thực thi (Deterministic).
 
 > **Analyst Note:** Sự chuyển đổi này cho thấy khả năng thích nghi với các cấu trúc dữ liệu khác nhau, từ việc thay đổi trạng thái (State change) sang việc tiêu thụ đầu ra giao dịch (UTXO spending).
+> ## 🌐 Multi-chain Capability (Ethereum & Cardano)
+This project is architected to handle milestone payments across different blockchain models:
+
+- **EVM Version:** Written in Solidity, focusing on state-based logic and Reentrancy protection.
+- **Cardano Version:** Written in Aiken, utilizing the eUTXO model for deterministic security and validator-based approvals.
+
+> **Technical Insight:** Moving from Solidity to Aiken allows for a more secure, formal verification-friendly environment for large-scale project funding.
