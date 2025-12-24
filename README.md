@@ -42,7 +42,7 @@ This project is architected to handle milestone payments across different blockc
 
 > **Technical Insight:** Moving from Solidity to Aiken allows for a more secure, formal verification-friendly environment for large-scale project funding.
 
-**Security Features" (Đặc tính bảo mật):**
+**Security Features - (Đặc tính bảo mật):**
 
 Circuit Breaker: Khả năng tạm dừng hợp đồng trong trường hợp khẩn cấp.
 
