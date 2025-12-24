@@ -18,3 +18,19 @@ This project is a decentralized financial management tool. It solves the problem
 ## 🚀 Cách kiểm tra dự án     - How to check a project
 1. `npx hardhat compile`: Biên dịch hợp đồng.
 2. `npx hardhat test`: Chạy bộ kiểm thử tự động.   # milestone-based-escrow
+
+---
+## 🔄 Multi-chain Architecture: EVM vs. Cardano (eUTXO)
+Dự án này được thiết kế để hoạt động trên cả hai mô hình blockchain phổ biến nhất hiện nay:
+
+### 1. Ethereum Implementation (Solidity)
+- **Model:** Account-based.
+- **Mechanism:** Sử dụng `State Variables` để lưu trữ tiến độ milestone.
+- **Security:** Chống Reentrancy bằng `nonReentrant` modifier của OpenZeppelin.
+
+### 2. Cardano Implementation (Aiken/Plutus)
+- **Model:** eUTXO (Extended Unspent Transaction Output).
+- **Mechanism:** Tiền được khóa trong một script address. Việc giải ngân dựa trên `Validator` kiểm tra chữ ký của Assessor trong `ScriptContext`.
+- **Advantage:** Tính bảo mật cao hơn do mô hình eUTXO cho phép kiểm tra kết quả giao dịch trước khi thực thi (Deterministic).
+
+> **Analyst Note:** Sự chuyển đổi này cho thấy khả năng thích nghi với các cấu trúc dữ liệu khác nhau, từ việc thay đổi trạng thái (State change) sang việc tiêu thụ đầu ra giao dịch (UTXO spending).
